@@ -117,3 +117,18 @@ class TestImageSpider(PillowTestCase):
         for i, frame in enumerate(ImageSequence.Iterator(im)):
             if i > 1:
                 self.fail("Non-stack DOS file test failed")
+
+    def test_non_standard_image_size(self):
+        # Arrange
+        temp = self.tempfile("temp.spider")
+        im = Image.new('F', (126, 64))
+
+        # Act
+        im.save(temp, "SPIDER")
+
+        # Assert
+        im2 = Image.open(temp)
+        self.assertEqual(im2.mode, "F")
+        self.assertEqual(im2.size, (126, 64))
+        self.assertEqual(im2.format, "SPIDER")
+
